@@ -38,8 +38,13 @@ def display_hangman(incorrect_guesses):
     ]
     print(hangman_parts[incorrect_guesses])
 
+def calculate_score(incorrect_guesses, word_length):
+    # Score calculation based on the number of incorrect guesses
+    # Adjust the formula as needed
+    return (word_length - incorrect_guesses) * 10
+
 def hangman():
-    theme = 'animals'  # Change the theme here
+    theme = 'animals'
     word = choose_word(theme)
     guessed_letters = []
     max_guesses = 6
@@ -59,6 +64,8 @@ def hangman():
             print(display_word(word, guessed_letters))
             if update_game_state(word, guessed_letters):
                 print("Congratulations! You've guessed the word correctly!")
+                score = calculate_score(incorrect_guesses, len(word))
+                print("Your score:", score)
                 break
         else:
             print("Incorrect!")
