@@ -72,6 +72,8 @@ def hangman():
             incorrect_guesses += 1
             display_hangman(incorrect_guesses)
             print(display_word(word, guessed_letters))
-if incorrect_guesses == max_guesses:
+            
+    if incorrect_guesses == max_guesses:
         print("Sorry, you ran out of guesses! The word was:", word)
+        
 hangman()
