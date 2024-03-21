@@ -1,152 +1,160 @@
-import tkinter as tk
+from tkinter import *
 import random
+from tkinter import messagebox
+#Initializing Empty List 
+mywords=[]
+file1 = open(r"commonword.txt","r")
+#Appending words from file to the list
+for x in file1:
+    mywords.append(x.replace('\n', ''))
+word=random.choice(mywords)
+random_word=list(word)
+p=[]
+s='_ '*len(random_word)
+p=s.split(' ')
+p.pop(len(random_word))
+actual=random_word.copy()
+class Hangman:
+    def __init__(self,master):
+        self.count=0
+        self.structure(master)
+        self.rr=master
+    def structure(self,master):
 
-class HangmanGame:
-  def _init_(self, master):
-      self.master = master
-      self.master.title("Hangman Game")
-      self.master.geometry("900x650")
-      self.master.configure(bg='light blue')
-      self.word_list = ["PYTHON", "JAVASCRIPT", "KOTLIN", "JAVA", "RUBY", "SWIFT"]
-      self.secret_word = self.choose_secret_word()
-      self.correct_guesses = set()
-      self.incorrect_guesses = set()
-      self.attempts_left = 7
-      self.initialize_gui()
+        """ Instruction Label """
 
-  def initialize_gui(self):
-      button_bg = "#4a7a8c"
-      button_fg = "white"
-      button_font = ("Helvetica", 12, "bold")
-      self.hangman_canvas = tk.Canvas(self.master, width=300, height=300, bg="white")
-      self.hangman_canvas.pack(pady=20)
-      self.word_display = tk.Label(self.master, text="_ " * len(self.secret_word), font=("Helvetica", 30), bg='light blue')
-      self.word_display.pack(pady=(40, 20))
-      self.reset_button = tk.Button(self.master, text="Reset Game", command=self.reset_game, width=20, height=2, bg=button_bg, fg=button_fg, font=button_font)
-      self.reset_button.pack(pady=(10, 0))
-      self.buttons_frame = tk.Frame(self.master)
-      self.buttons_frame.pack(pady=20)
-      self.setup_alphabet_buttons()
- 
-  def setup_alphabet_buttons(self):
-      button_bg = "#4a7a8c"
-      button_fg = "white"
-      button_font = ("Helvetica", 12, "bold")
+        # Create instruction label for Program
+        self.inst_lbl = Label(master,text = "Welcome to Hangman Game!")
+        self.inst_lbl.grid(row = 0, column = 0,columnspan = 2,sticky = W)
 
-      alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-      upper_row = alphabet[:13]
-      lower_row = alphabet[13:]
-     
-      upper_frame = tk.Frame(self.buttons_frame)
-      upper_frame.pack()
-      lower_frame = tk.Frame(self.buttons_frame)
-      lower_frame.pack()
+        """ Guess Input """
 
-      for letter in upper_row:
-          button = tk.Button(upper_frame, text=letter, command=lambda l=letter: self.guess_letter(l), width=4, height=2, bg=button_bg, fg=button_fg, font=button_font)
-          button.pack(side="left", padx=2, pady=2)
+        # Create label for entering Guess
+        self.guess_lbl = Label(master, text = "Enter your Guess:")
+        self.guess_lbl.grid(row = 1, column = 0,sticky = W)
 
-      for letter in lower_row:
-          button = tk.Button(lower_frame, text=letter, command=lambda l=letter: self.guess_letter(l), width=4, height=2, bg=button_bg, fg=button_fg, font=button_font)
-          button.pack(side="left", padx=2, pady=2)
-     
-  def choose_secret_word(self):
-      return random.choice(self.word_list)
+        # Create entry widget to accept Guess
+        self.guess_ent = Entry(master)
+        self.guess_ent.grid(row = 1, column = 1,sticky = W)
 
-  def update_hangman_canvas(self):
-      self.hangman_canvas.delete("all")
-      stages = [self.draw_head, self.draw_body, self.draw_left_arm, self.draw_right_arm,
-                self.draw_left_leg, self.draw_right_leg, self.draw_face]
-      for i in range(len(self.incorrect_guesses)):
-          if i < len(stages):
-              stages[i]()
- 
-  def draw_head(self):
-      self.hangman_canvas.create_oval(125, 50, 185, 110, outline="black")
 
-  def draw_body(self):
-      self.hangman_canvas.create_line(155, 110, 155, 170, fill="black")
+        # Create a space
+        self.gap2_lbl1 = Label(master, text = " ")
+        self.gap2_lbl1.grid(row = 2, column = 0,sticky = W)
 
-  def draw_left_arm(self):
-      self.hangman_canvas.create_line(155, 130, 125, 150, fill="black")
+        # Creating a submit button
+        self.submit_bttn = Button(master, text = "Submit",command=self.submit,height=1,width=20)
+        self.submit_bttn.grid(row = 3, column =1,sticky = W)
 
-  def draw_right_arm(self):
-      self.hangman_canvas.create_line(155, 130, 185, 150, fill="black")
+        master.bind('<Return>',self.submit)
 
-  def draw_left_leg(self):
-      self.hangman_canvas.create_line(155, 170, 125, 200, fill="black")
+        # Create a space
 
-  def draw_right_leg(self):
-      self.hangman_canvas.create_line(155, 170, 185, 200, fill="black")
+        self.gap2_lbl2 = Label(master, text = " ")
+        self.gap2_lbl2.grid(row = 4, column = 0,sticky = W)
 
-  def draw_face(self):
-      self.hangman_canvas.create_line(140, 70, 150, 80, fill="black")
-      self.hangman_canvas.create_line(160, 70, 170, 80, fill="black")
-      self.hangman_canvas.create_arc(140, 85, 170, 105, start=0, extent=-180, fill="black")
+        """ RESET """
 
-  def guess_letter(self, letter):
-      if letter in self.secret_word and letter not in self.correct_guesses:
-          self.correct_guesses.add(letter)
-      elif letter not in self.incorrect_guesses:
-          self.incorrect_guesses.add(letter)
-          self.attempts_left -= 1
-          self.update_hangman_canvas()
-     
-      self.update_word_display()
-      self.check_game_over()
+        # Creating a reset button
+        self.reset_bttn = Button(master, text = "Reset",command=self.reset,height=2, width=20)
+        self.reset_bttn.grid(row = 9, column = 2,sticky = W)
 
-  def update_word_display(self):
-      displayed_word = " ".join([letter if letter in self.correct_guesses else "_" for letter in self.secret_word])
-      self.word_display.config(text=displayed_word)
+        # Create a space
+        self.gap2_lbl3 = Label(master, text = " ")
+        self.gap2_lbl3.grid(row = 5, column = 0,sticky = W)
 
-  def check_game_over(self):
-      if set(self.secret_word).issubset(self.correct_guesses):
-          self.display_game_over_message("Congratulations, you've won!")
-      elif self.attempts_left == 0:
-          self.display_game_over_message(f"Game over! The word was: {self.secret_word}")
- 
-  def display_game_over_message(self, message):
-      stylish_font = ("Arial", 18, "italic")
-      button_bg = "#4a7a8c"
-      button_fg = "white"
-      button_font = ("Helvetica", 12, "bold")
+        self.inst_lb2 = Label(master, text ='Life:10')
+        self.inst_lb2.grid(row = 1,column = 2,columnspan = 2,sticky = W)
 
-      self.reset_button.pack_forget()
-      self.buttons_frame.pack_forget()
-     
-      self.game_over_label = tk.Label(self.master, text=message, font=stylish_font, fg="red", bg='light blue')
-      self.game_over_label.pack(pady=(10, 20))
+        #Creating Label to Display Message
+        self.inst_lb3 = Label(master, text ='')
+        self.inst_lb3.grid(row = 6,column = 0,columnspan = 2,sticky = W)
 
-      if not hasattr(self, 'restart_button'):
-          self.restart_button = tk.Button(self.master, text="Restart Game", command=self.reset_game, width=20, height=2, bg=button_bg, fg=button_fg, font=button_font)
-      self.restart_button.pack(pady=(10, 20))
- 
-  def reset_game(self):
-      self.secret_word = self.choose_secret_word()
-      self.correct_guesses = set()
-      self.incorrect_guesses = set()
-      self.attempts_left = 7
+        #Creating label to display current Guessed Status of Word
 
-      self.hangman_canvas.delete("all")
-      self.update_word_display()
-     
-      for frame in self.buttons_frame.winfo_children():
-          for button in frame.winfo_children():
-              button.configure(state=tk.NORMAL)
-     
-      self.reset_button.pack(pady=(10, 0))
-     
-      if hasattr(self, 'game_over_label') and self.game_over_label.winfo_exists():
-          self.game_over_label.pack_forget()
-      if hasattr(self, 'restart_button') and self.restart_button.winfo_exists():
-          self.restart_button.pack_forget()
+        self.curr_char1 = Label(master, text =p)
+        self.curr_char1.place(x=100,y=130)
+        self.curr_char = Label(master, text ="Current Status:")
+        self.curr_char.place(x=0,y=130)
 
-      self.buttons_frame.pack()
+        # Create a Hangman's Background
 
-def main():
-  root = tk.Tk()
-  game = HangmanGame(root)
-  root.mainloop()
+        self.c=Canvas(master,height=300,width=200)
+        self.c.grid(row=9,column=0,sticky =W)
+        self.l=self.c.create_line(70,20,70,250,width=2)
+        self.l1=self.c.create_line(70,20,150,20,width=2)
+        self.l2=self.c.create_line(150,20,150,50,width=2)
+    def current_status(self,char):
+        self.curr_char1 = Label(self.rr, text =char)
+        self.curr_char1.place(x=100,y=130)
+    def reset(self):
+        self.guess_ent.delete(0, 'end')
+    def submit(self,*args):
 
-if _name_ == "_main_":
-  main()
+        #Taking Entry From Entry Field
+        char=self.guess_ent.get()
+
+        #Checking whether Entry Field is empty or not
+        if(len(char)==0):
+            messagebox.showwarning("Warning","Entry field is Empty")
+        if(len(char)>1):
+            messagebox.showwarning("Warning","Enter the single letter")
+
+        if char in actual and len(char)==1:
+            l=actual.count(char)
+            for j in range(l):
+                i=actual.index(char)
+                p.insert(i,char)
+                p.pop(i+1)
+                actual.insert(i,'_')
+                actual.pop(i+1)
+            self.inst_lb2.config(text='Life:'+ str(10-self.count))
+            self.inst_lb3.config(text='Right Guessed!')
+            self.guess_ent.delete(0, 'end')
+            self.current_status(p)
+
+        elif(len(char)==1):
+            self.count=self.count+1
+            self.inst_lb2.config(text='Life:'+str(10-self.count))
+            self.inst_lb3.config(text='Wrong Guessed!')
+            self.guess_ent.delete(0, 'end')
+
+        #Creating Hangman's parts orderwise if wrong character is Guessed
+        if(self.count==1):
+            self.cir=self.c.create_oval(125,100,175,50,width=2)
+        elif(self.count==2):
+            self.el=self.c.create_line(135,65,145,65,width=2)
+        elif(self.count==3):
+            self.er=self.c.create_line(155,65,165,65,width=2)
+        elif(self.count==4):
+            self.no=self.c.create_line(150,70,150,85,width=2)
+        elif(self.count==5):
+            self.mo=self.c.create_line(140,90,160,90,width=2)
+        elif(self.count==6):
+            self.l3=self.c.create_line(150,100,150,200,width=2)
+        elif(self.count==7):
+            self.hl=self.c.create_line(150,125,100,150,width=2)
+        elif(self.count==8):
+            self.hr=self.c.create_line(150,125,200,150,width=2)
+        elif(self.count==9):
+            self.fl=self.c.create_line(150,200,100,225,width=2)
+        elif(self.count==10):
+            self.fr=self.c.create_line(150,200,200,225,width=2)
+
+
+        #Condition of Player Won
+        if( p==random_word):
+            self.inst_lb3.config(text='You perfectly guessed the word!')
+            messagebox.showinfo("Hello", "You Won")
+            self.rr.destroy()
+
+        #Condition Of player Loose
+        elif(self.count>=10):
+            self.inst_lb3.config(text='You lost.... the word is '+word)
+            messagebox.showinfo("Hello", "You lost please try again!")
+            self.rr.destroy()
+root = Tk()
+root.title("Hangman Game")
+root.geometry("580x480")
+app = Hangman(root)
+root.mainloop()
