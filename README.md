@@ -9,6 +9,18 @@ Dhruv Sharma : Tester : Rno 2310991816
 Description -
 Hangman is a classic word-guessing game typically played between two people, where one player thinks of a word and the other player tries to guess it by suggesting letters one at a time. The game is usually played with pencil and paper, but it can also be implemented as a computer program.
 
+Features -
+1.Word Bank: Include a predefined list of words from which the game randomly selects a word for the player to guess.
+2.Guessing Mechanism: Allow the player to guess letters one by one.
+3.Display Placeholder for Letters: Show the player how many letters are in the word and display underscores or dashes for each letter that has not been guessed yet.
+4.Incorrect Guesses Counter: Keep track of the number of incorrect guesses the player makes.
+5.Visual Representation of Hangman: Draw a hangman figure that gradually appears as the player makes incorrect guesses.
+6.Letter Validation: Check if the input from the player is a valid letter.
+7.Feedback on Guesses: Provide feedback to the player on whether their guess is correct or incorrect.
+8.Display Guessed Letters: Show the player the letters they have already guessed.
+9.Win/Loss Conditions: Implement conditions for winning and losing the game. For example, winning when the player guesses all the letters correctly and losing when the hangman figure is complete.
+10.Play Again Option: Offer the player the option to play again once the game is over.
+
 Here's how the game typically works:
 
 1. Setup: One player (the "chooser") selects a secret word and keeps it hidden from the other player (the "guesser"). The secret word is typically chosen from a predetermined list or generated randomly.
@@ -26,7 +38,7 @@ Hangman is a simple yet entertaining game that challenges players' vocabulary an
 Instructions -
 To run a Python Hangman game, you'll first need to have Python installed on your computer. Once you have Python installed, follow these instructions:
 
-1. Download or Create the Hangman Python Script: You can either write your own Hangman game script or download one from various sources available online. If you're writing your own, make sure it includes the necessary functions for gameplay, such as choosing a word, displaying the word with blanks, handling guesses, and checking for win/loss conditions.
+1. Download or Create the Hangman Python Script and the text file: You can either write your own Hangman game script or download one from various sources available online. If you're writing your own, make sure it includes the necessary functions for gameplay, such as choosing a word, displaying the word with blanks, handling guesses, and checking for win/loss conditions.
 
 2. Open a Text Editor or Integrated Development Environment (IDE): Use a text editor like Notepad, Sublime Text, or an IDE like PyCharm, Visual Studio Code, or IDLE to open the Hangman Python script.
 
